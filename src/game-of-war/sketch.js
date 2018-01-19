@@ -16,7 +16,7 @@ function centerCanvas() {
 function sleep(milliseconds) {
   var start = new Date().getTime();
   for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
+    if ((new Date().getTime() - start) > milliseconds) {
       break;
     }
   }
@@ -30,7 +30,6 @@ function createCards() {
     face = i % 13 > 8 ? pips[(i % 13) - 9] + ' of ' : (i % 13 + 2) + ' of ';
     face += suites[floor(i / 13)];
     allCards.push(new Card(face, i % 13, floor(i / 13)));
-    //allCards.push(new Card(face, i%2, floor(i / 13)));
     i++;
   }
 }
@@ -63,22 +62,28 @@ function handleWar(cardsOnTable) {
   var card1, card2, card, offset = 20,
     cardX = width / 2 - cardWidth / 2 + cardWidth + offset,
     cardY = cardHeight + cardBackOffset + 20;
+  if (player1.deck.length < 2) {
+    addCardsToDeck(player2, cardsOnTable);
+    return;
+  } else if ((player2.deck.length < 2)) {
+    addCardsToDeck(player1, cardsOnTable);
+    return;
+  }
   for (var i = 0; i < 2; i++) {
-      card = player1.getNextCard();
-      renderCard(cardX + i*offset, cardY, card);
-      cardsOnTable.push(card);
+    card = player1.getNextCard();
+    renderCard(cardX + i * offset, cardY, card);
+    cardsOnTable.push(card);
 
-      card = player2.getNextCard();
-      renderCard(cardX + i*offset, height - (cardY + cardHeight), card);
-      cardsOnTable.push(card);
-      sleep(100);
+    card = player2.getNextCard();
+    renderCard(cardX + i * offset, height - (cardY + cardHeight), card);
+    cardsOnTable.push(card);
   }
 
-  card1 = player1.getNextCard();  
-  renderCard(cardX + i*offset, cardY, card1);
+  card1 = player1.getNextCard();
+  renderCard(cardX + i * offset, cardY, card1);
   cardsOnTable.push(card1);
   card2 = player2.getNextCard();
-  renderCard(cardX + i*offset, height - (cardY + cardHeight), card2);
+  renderCard(cardX + i * offset, height - (cardY + cardHeight), card2);
   cardsOnTable.push(card2);
 
   if (card1.value > card2.value) {
@@ -92,7 +97,7 @@ function handleWar(cardsOnTable) {
 
 function addCardsToDeck(player, cards) {
   for (var i = 0; i < cards.length; i++) {
-    player.deck.push(cards[i]);    
+    player.deck.push(cards[i]);
   }
 }
 /*--------------------SETUP--------------------*/
@@ -105,7 +110,6 @@ function setup() {
   renderTable();
   console.log(player1);
   console.log(player2);
-  console.log(height);
 }
 
 function renderTable(war, cardsOnTable) {
@@ -118,6 +122,11 @@ function renderTable(war, cardsOnTable) {
   //render back of the card
   renderCard(cardBackOffset, cardBackOffset, cardBack);
   renderCard(cardBackOffset, height - (cardHeight + cardBackOffset), cardBack);
+
+  //render card count
+  textSize(32);
+  text(player1.deck.length, cardBackOffset + (cardWidth / 2) - 16, cardBackOffset + (cardHeight / 2) + 10);
+  text(player2.deck.length, cardBackOffset + (cardWidth / 2) - 16, height - (cardHeight + cardBackOffset) + (cardHeight / 2) + 10);
 
   //render cards  
   cardX = width / 2 - cardWidth / 2;
@@ -156,3 +165,4 @@ function mouseClicked() {
   console.log(player1);
   console.log(player2);
 }
+
