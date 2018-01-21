@@ -165,4 +165,3 @@ function mouseClicked() {
   console.log(player1);
   console.log(player2);
 }
-
